@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cocomo.dao.EAFEarlyDesignDefaultMapper">
+    <resultMap id="BaseResultMap" type="com.cocomo.pojo.EAFEarlyDesignDefault" >
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="exlow" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="vlow" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="low" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="nom" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="high" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="vhigh" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="exhigh" jdbcType="DOUBLE" javaType="java.lang.Double" />
+        </constructor>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, name, exlow, vlow, low, nom, high, vhigh, exhigh
+    </sql>
+
+    <select id="checkDriverName" resultType="int" parameterType="string">
+        select count(1)
+        from eaf_earlydesign_default
+        where name = #{driverName}
+    </select>
+
+    <select id="selectScheduleDefaultByLevel" parameterType="java.lang.String" resultType="java.lang.Double">
+        select ${scheduleLevel}
+        from eaf_earlydesign_default
+        where name = "sced"
+    </select>
+
+    <update id="updateByUserInput" parameterType="map">
+        update eaf_earlydesign_default
+        set ${driverLevel} = ${value}
+        where name = #{driverName}
+    </update>
+
+    <select id="selectAllDefault" resultType="java.util.HashMap">
+        select id, name, exlow, vlow, low, nom, high, vhigh, exhigh
+        from eaf_earlydesign_default
+    </select>
+
+    <select id="getEafEarlyDesignDefault" resultMap="BaseResultMap">
+        select id, name, exlow, vlow, low, nom, high, vhigh, exhigh
+        from eaf_earlydesign_default
+    </select>
+</mapper>

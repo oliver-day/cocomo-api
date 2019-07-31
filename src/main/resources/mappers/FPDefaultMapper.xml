@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cocomo.dao.FPDefaultMapper">
+    <resultMap id="BaseResultMap" type="com.cocomo.pojo.FPDefault" >
+        <constructor>
+            <arg column="function_type" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="low" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="average" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="high" jdbcType="INTEGER" javaType="java.lang.Integer" />
+        </constructor>
+    </resultMap>
+
+    <select id="getDefaultFunctionPoints" resultMap="BaseResultMap">
+      select function_type, low, average, high
+      from fp_complexity_weights_default
+    </select>
+
+    <select id="checkFunctionPointType" parameterType="String" resultType="int">
+        select count(1)
+        from fp_complexity_weights_default
+        where function_type = #{functionPointType}
+    </select>
+
+    <update id="updateDefaultFunctionPoints" parameterType="map">
+        update fp_complexity_weights_default
+        set low = ${lowWeight}, average = ${aveWeight}, high = ${highWeight}
+        where function_type = #{functionPointType}
+    </update>
+
+    <select id="getFPComplexityWeights" resultType="java.util.HashMap">
+        select id, function_type, low, average, high
+        from fp_complexity_weights_default
+    </select>
+</mapper>

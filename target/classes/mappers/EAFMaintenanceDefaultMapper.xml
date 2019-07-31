@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cocomo.dao.EAFMaintenanceDefaultMapper">
+
+    <resultMap id="BaseResultMap" type="com.cocomo.pojo.EAFMaintenanceDefault" >
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="vlow" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="low" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="nom" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="high" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="vhigh" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="exhigh" jdbcType="DOUBLE" javaType="java.lang.Double" />
+        </constructor>
+    </resultMap>
+
+    <select id="checkDriverName" resultType="int" parameterType="string">
+        select count(1)
+        from eaf_maintenance_default
+        where name = #{driverName}
+    </select>
+
+    <update id="updateByUserInput" parameterType="map">
+        update eaf_maintenance_default
+        set ${driverLevel} = ${value}
+        where name = #{driverName}
+    </update>
+
+    <select id="selectAllDefault" resultType="java.util.HashMap">
+        select id, name, vlow, low, nom, high, vhigh, exhigh
+        from eaf_maintenance_default
+    </select>
+
+    <select id="getEafMaintenanceDefault" resultMap="BaseResultMap">
+        select id, name, vlow, low, nom, high, vhigh, exhigh
+        from eaf_maintenance_default
+    </select>
+</mapper>

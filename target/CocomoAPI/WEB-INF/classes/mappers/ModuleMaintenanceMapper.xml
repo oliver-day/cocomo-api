@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cocomo.dao.ModuleMaintenanceMapper">
+    <resultMap id="BaseResultMap" type="com.cocomo.pojo.ModuleMaintenance" >
+        <constructor>
+            <arg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="pm" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="cost" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="percentage_added" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="percentage_modified" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="labor_rate" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="software_understanding" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="software_unfamiliarity" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="project_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="module_index" jdbcType="INTEGER" javaType="java.lang.Integer" />
+        </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.cocomo.pojo.ModuleMaintenance" useGeneratedKeys="true" keyProperty="id">
+        insert into module_maintenance (pm, cost, percentage_added, percentage_modified, labor_rate, software_understanding, software_unfamiliarity, project_id, module_index)
+        values (#{pm,jdbcType=DOUBLE}, #{cost,jdbcType=DOUBLE},
+        #{percentageAdded,jdbcType=DOUBLE}, #{percentageModified,jdbcType=DOUBLE},
+        #{laborRate,jdbcType=DOUBLE}, #{softwareUnderstanding,jdbcType=INTEGER}, #{softwareUnfamiliarity,jdbcType=DOUBLE},
+        #{projectId,jdbcType=INTEGER}, #{moduleIndex,jdbcType=INTEGER})
+    </insert>
+
+    <select id="checkCalculated" resultType="int" parameterType="map">
+        select count(1)
+        from module_maintenance
+        where project_id = #{projectId}
+        and module_index = #{moduleIndex}
+    </select>
+
+    <select id="getModuleMaintenanceByProjectId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select id, pm, cost, percentage_added, percentage_modified, labor_rate, software_understanding, software_unfamiliarity,
+        project_id, module_index
+        from module_maintenance
+        where project_id = #{projectId}
+    </select>
+
+    <update id="updateByProjectIdAndModuleIndex" parameterType="com.cocomo.pojo.ModuleMaintenance">
+        update module_maintenance
+        set pm = #{pm,jdbcType=DOUBLE},
+        cost = #{cost,jdbcType=DOUBLE},
+        percentage_added = #{percentageAdded,jdbcType=DOUBLE},
+        percentage_modified = #{percentageModified,jdbcType=DOUBLE},
+        labor_rate = #{laborRate,jdbcType=DOUBLE},
+        software_understanding = #{softwareUnderstanding,jdbcType=INTEGER},
+        software_unfamiliarity = #{softwareUnfamiliarity,jdbcType=DOUBLE}
+        where project_id = #{projectId,jdbcType=INTEGER}
+        and module_index = #{moduleIndex,jdbcType=INTEGER}
+    </update>
+
+    <select id="getMaintenanceByProjectAndModuleIndex" parameterType="map" resultMap="BaseResultMap">
+        select id, pm, cost, percentage_added, percentage_modified, labor_rate, software_understanding, software_unfamiliarity,
+        project_id, module_index
+        from module_maintenance
+        where project_id = #{projectId}
+        and module_index = #{moduleIndex}
+    </select>
+
+
+</mapper>

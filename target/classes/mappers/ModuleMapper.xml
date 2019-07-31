@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cocomo.dao.ModuleMapper">
+    <resultMap id="BaseResultMap" type="com.cocomo.pojo.Module" >
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="module_index" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="size" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="labor" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="eaf" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="language" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="nom_effort_dev" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="est_effort_dev" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="prod" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="cost" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="inst_cost" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="staff" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="risk" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="project_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+        </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.cocomo.pojo.Module" useGeneratedKeys="true" keyProperty="id">
+        insert into module (module_index, name, size, labor, eaf, language, nom_effort_dev, est_effort_dev, prod, cost, inst_cost, staff, risk, project_id)
+        values (#{moduleIndex,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{size,jdbcType=INTEGER},
+          #{labor,jdbcType=DOUBLE}, #{eaf,jdbcType=DOUBLE}, #{language,jdbcType=VARCHAR},
+          #{nomEffortDev,jdbcType=DOUBLE}, #{estEffortDev,jdbcType=DOUBLE}, #{prod,jdbcType=DOUBLE},
+          #{cost,jdbcType=DOUBLE}, #{instCost,jdbcType=DOUBLE}, #{staff,jdbcType=DOUBLE}, #{risk,jdbcType=DOUBLE},
+          #{projectId,jdbcType=INTEGER})
+    </insert>
+
+    <select id="getTotalModuleByProjectId" resultType="int" parameterType="int">
+        select count(1)
+        from module
+        where project_id = #{projectId}
+    </select>
+
+    <select id="getModuleNamesByProjectId" resultType="string" parameterType="int">
+        select name
+        from module
+        where project_id = #{projectId}
+    </select>
+
+    <select id="checkModule" resultType="int" parameterType="map">
+        select count(1)
+        from module
+        where module_index = #{moduleIndex}
+        and project_id = #{projectId}
+    </select>
+
+    <delete id="deleteModulesByProjectId" parameterType="java.lang.Integer">
+        delete
+        from module
+        where project_id = #{projectId}
+    </delete>
+
+    <delete id="deleteModuleByProjectIdAndModuleIndex" parameterType="map">
+        delete from module
+        where module_index = #{moduleIndex}
+        and project_id = #{projectId}
+    </delete>
+
+    <update id="updateModuleIndex" parameterType="map">
+        update module
+        set module_index = module_index - 1
+        where project_id = #{projectId}
+        and module_index > #{moduleIndex}
+    </update>
+
+    <select id="getModuleRowByProjectId" resultMap="BaseResultMap" parameterType="map">
+        select *
+        from module
+        where module_index = #{moduleIndex}
+        and project_id = #{projectId}
+    </select>
+
+    <select id="getModulesByProjectId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select *
+        from module
+        where project_id = #{projectId}
+    </select>
+
+    <select id="getModuleNameByProjectIdAndModuleIndex" resultType="string" parameterType="map">
+        select name
+        from module
+        where project_id = #{projectId}
+        and module_index = #{moduleIndex}
+    </select>
+
+    <select id="getAggregateSloc" resultType="double" parameterType="int">
+        select sum(size)
+        from module
+        where project_id = #{projectId}
+    </select>
+
+    <update id="updateCalculatedColumnsByPrimaryKey" parameterType="com.cocomo.pojo.EstimateRange">
+        update module
+        set nom_effort_dev = #{nomEffortDev,jdbcType=DOUBLE},
+        est_effort_dev = #{estEffortDev,jdbcType=DOUBLE},
+        prod = #{prod,jdbcType=DOUBLE},
+        cost = #{cost,jdbcType=DOUBLE},
+        inst_cost = #{instCost,jdbcType=DOUBLE},
+        staff = #{staff,jdbcType=DOUBLE},
+        risk = #{risk,jdbcType=DOUBLE}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateModuleEaf" parameterType="map">
+        update module
+        set eaf = #{eaf}
+        where project_id = #{projectId}
+        and module_index = #{moduleIndex}
+    </update>
+
+    <update id="updateModuleName" parameterType="map">
+        update module
+        set name = #{name}
+        where project_id = #{projectId}
+        and module_index = #{moduleIndex}
+    </update>
+
+    <update id="updateModuleLabor" parameterType="map">
+        update module
+        set labor = #{labor}
+        where project_id = #{projectId}
+        and module_index = #{moduleIndex}
+    </update>
+
+    <update id="updateModulesEAfDueToScheduleChange" parameterType="map">
+        update module
+        set eaf = ((eaf / #{oldSCHEDValue}) * #{newSCHEDValue})
+        where project_id = #{projectId}
+    </update>
+
+    <update id="updateModuleSize" parameterType="map">
+        update module
+        set size = #{moduleSize}
+        where project_id = #{projectId}
+        and module_index = #{moduleIndex}
+    </update>
+
+    <select id="getModuleSize" parameterType="map" resultType="int">
+        select size
+        from module
+        where project_id = #{projectId}
+        and module_index = #{moduleIndex}
+    </select>
+
+    <select id="getModuleEAF" parameterType="map" resultType="Double">
+        select eaf
+        from module
+        where project_id = #{projectId}
+        and module_index = #{moduleIndex}
+    </select>
+
+    <select id="getModuleLanguage" parameterType="map" resultType="String">
+        select language
+        from module
+        where project_id = #{projectId}
+        and module_index = #{moduleIndex}
+    </select>
+
+    <select id="getCostByProjectAndModuleIndex" parameterType="map" resultType="Double">
+        select cost
+        from module
+        where project_id = #{projectId}
+        and module_index = #{moduleIndex}
+    </select>
+
+    <select id="getNomEffortByProjectAndModuleIndex" parameterType="map" resultType="Double">
+        select nom_effort_dev
+        from module
+        where project_id = #{projectId}
+        and module_index = #{moduleIndex}
+    </select>
+
+    <select id="getModuleLabor" parameterType="map" resultType="Double">
+        select labor
+        from module
+        where project_id = #{projectId}
+        and module_index = #{moduleIndex}
+    </select>
+
+    <update id="updateModuleLanguage" parameterType="map">
+        update module
+        set language = #{moduleLanguage}
+        where project_id = #{projectId}
+        and module_index = #{moduleIndex}
+    </update>
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cocomo.dao.EstimateRangeMapper">
+    <resultMap id="BaseResultMap" type="com.cocomo.pojo.EstimateRange" >
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="type" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="project_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="effort" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="sched" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="prod" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="cost" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="inst" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="staff" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="risk" jdbcType="DOUBLE" javaType="java.lang.Double" />
+        </constructor>
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, type, project_id, effort, sched, prod, cost, inst, staff, risk
+    </sql>
+
+    <select id="checkCalculated" resultType="int" parameterType="int">
+        select count(1)
+        from estimate_range
+        where project_id = #{projectId}
+    </select>
+
+    <delete id="deleteEstimatedRangeByProjectId" parameterType="java.lang.Integer">
+        delete
+        from estimate_range
+        where project_id = #{projectId}
+    </delete>
+
+    <select id="getPessimisticByProjectId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List" />
+        from estimate_range
+        where project_id = #{projectId}
+        and type = 1
+    </select>
+
+    <select id="getMostLikelyByProjectId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List" />
+        from estimate_range
+        where project_id = #{projectId}
+        and type = 2
+    </select>
+
+    <select id="getOptimisticByProjectId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List" />
+        from estimate_range
+        where project_id = #{projectId}
+        and type = 3
+    </select>
+
+    <update id="insert" parameterType="com.cocomo.pojo.EstimateRange" useGeneratedKeys="true" keyProperty="id">
+        insert into estimate_range (type, project_id, effort, sched, prod, cost, inst, staff, risk)
+        values (#{type,jdbcType=INTEGER}, #{projectId,jdbcType=INTEGER}, #{effort,jdbcType=DOUBLE},
+        #{sched,jdbcType=DOUBLE},#{prod,jdbcType=DOUBLE}, #{cost,jdbcType=DOUBLE},
+        #{inst,jdbcType=DOUBLE}, #{staff,jdbcType=DOUBLE}, #{risk,jdbcType=DOUBLE})
+    </update>
+
+    <update id="updateByPrimaryKey" parameterType="com.cocomo.pojo.EstimateRange">
+        update estimate_range
+        set effort = #{effort,jdbcType=DOUBLE},
+          sched = #{sched,jdbcType=DOUBLE},
+          prod = #{prod,jdbcType=DOUBLE},
+          cost = #{cost,jdbcType=DOUBLE},
+          inst = #{inst,jdbcType=DOUBLE},
+          staff = #{staff,jdbcType=DOUBLE},
+          risk = #{risk,jdbcType=DOUBLE}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

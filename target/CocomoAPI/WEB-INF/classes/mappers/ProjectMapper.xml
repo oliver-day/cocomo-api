@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cocomo.dao.ProjectMapper">
+    <resultMap id="BaseResultMap" type="com.cocomo.pojo.Project" >
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="scale_factor" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="schedule" jdbcType="DOUBLE" javaType="java.lang.Double" />
+            <arg column="schedule_level" jdbcType="DOUBLE" javaType="java.lang.Integer" />
+            <arg column="notes" jdbcType="VARCHAR" javaType="java.lang.String" />
+            <arg column="total_lines" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="effort" jdbcType="INTEGER" javaType="java.lang.Integer" />
+            <arg column="stage" jdbcType="INTEGER" javaType="java.lang.Integer" />
+        </constructor>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.cocomo.pojo.Project" useGeneratedKeys="true" keyProperty="id">
+        insert into project (scale_factor, schedule, schedule_level, notes, total_lines, effort, stage)
+        values (#{scaleFactor,jdbcType=DOUBLE}, #{schedule,jdbcType=DOUBLE}, #{scheduleLevel,jdbcType=INTEGER}, #{notes,jdbcType=VARCHAR},
+          #{totalLines,jdbcType=INTEGER}, #{effort,jdbcType=INTEGER}, #{stage,jdbcType=INTEGER})
+    </insert>
+
+    <delete id="deleteProjectByProjectId" parameterType="java.lang.Integer">
+        delete
+        from project
+        where id = ${projectId}
+    </delete>
+
+    <select id="getScaleFactorByProjectId" parameterType="java.lang.Integer" resultType="java.lang.Double">
+        select scale_factor
+        from project
+        where id = ${projectId}
+    </select>
+
+    <select id="getScheduleByProjectId" parameterType="java.lang.Integer" resultType="java.lang.Double">
+        select schedule
+        from project
+        where id = ${projectId}
+    </select>
+
+    <update id="updateScheduleLevelByProjectId" parameterType="map">
+        update project
+        set schedule_level = #{scheduleLevel}
+        where id = ${projectId}
+    </update>
+
+    <update id="updateScheduleValueByProjectId" parameterType="map">
+        update project
+        set schedule = #{scheduleValue}
+        where id = ${projectId}
+    </update>
+
+    <update id="updateNotesByProjectId" parameterType="map">
+        update project
+        set notes = #{notes}
+        where id = ${projectId}
+    </update>
+
+    <select id="checkProject" resultType="int" parameterType="int">
+        select count(1)
+        from project
+        where id = #{projectId}
+    </select>
+
+    <select id="getStageByProjectId" resultType="int" parameterType="int">
+        select stage
+        from project
+        where id = #{projectId}
+    </select>
+
+    <select id="getNotesByProjectId" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select notes
+        from project
+        where id = ${projectId}
+    </select>
+
+    <update id="updateScaleFactorByProjectId" parameterType="map">
+        update project
+        set scale_factor = #{scaleFactor}
+        where id = ${projectId}
+    </update>
+
+    <select id="getScheduleLevelByProjectId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select schedule_level
+        from project
+        where id = ${projectId}
+    </select>
+
+    <update id="updateTotalLinesByProjectId" parameterType="map">
+        update project
+        set total_lines = #{num}
+        where id = ${projectId}
+    </update>
+
+    <update id="updateEffortByProjectId" parameterType="map">
+        update project
+        set effort = #{num}
+        where id = ${projectId}
+    </update>
+
+    <select id="getTotalLinesByProjectId" resultType="int" parameterType="int">
+        select total_lines
+        from project
+        where id = #{projectId}
+    </select>
+
+    <select id="getEffortByProjectId" resultType="int" parameterType="int">
+        select effort
+        from project
+        where id = #{projectId}
+    </select>
+
+</mapper>
